@@ -5,7 +5,7 @@ label: "E-commerce Demo"
 include: "/explores/inventory_items.explore.lkml"
 include: "/explores/order_items.explore.lkml"
 
-include: "/dashboards/brand_lookup.dashboard.lookml"
+include: "/dashboards/business_pulse.dashboard.lookml"
 
 
 include: "/utilities/datagroups.lkml"
