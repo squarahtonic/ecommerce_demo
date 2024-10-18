@@ -10,8 +10,13 @@ view: geography_dimensions {
       url: "/explore/thelook_ecommerce/order_items?fields=users.state,users.city,order_items.order_count&f[users.city]={{ value }}&sorts=order_items.order_count+desc&limit=500"
       icon_url: "https://cloud.google.com/favicon.ico"
     }
-
+    link: {
+    label: "Search"
+    url: "http://www.google.com/search?q={{ value }}"
+    icon_url: "http://www.google.com/s2/favicons?domain=www.{{ value | encode_uri }}.com"
   }
+}
+
 
   dimension: country {
     type: string
