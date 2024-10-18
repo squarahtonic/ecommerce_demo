@@ -15,6 +15,12 @@ explore: order_items {
 
   persist_with: orders_datagroup
 
+#  access_filter: {
+#    field: users.city
+#    user_attribute: location
+#  }
+
+
   join: users {
     type: left_outer
     sql_on: ${order_items.user_id} = ${users.id} ;;

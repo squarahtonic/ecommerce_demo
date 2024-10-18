@@ -1,5 +1,6 @@
 include: "/views/users.view.lkml"
 include: "/refined_views/r_geography_dimensions.view.lkml"
+include: "/utilities/access_grants.lkml"
 
 view: +users {
   extends: [geography_dimensions]
@@ -26,10 +27,11 @@ view: +users {
     sql: ${TABLE}.created_at ;;
   }
 
-  dimension: days_since_sign_up {
-    type: number
-    sql: DATEDIFF(day, ${created_raw}, current_date) ;;
-    hidden: yes
+  dimension_group: since_sign_up {
+    type: duration
+    intervals: [day]
+    sql_start: ${created_date} ;;
+    sql_end: current_date () ;;
   }
 
   dimension: days_since_signup_tier {
@@ -62,10 +64,11 @@ view: +users {
     sql: INITCAP(${TABLE}.last_name) ;;
   }
 
-#  dimension: full_name {
-#    type: string
-#    sql: ${first_name} || ' ' || ${last_name} ;;
-#  }
+  dimension: full_name {
+    required_access_grants: [sensitive]
+    type: string
+    sql: ${first_name} || ' ' || ${last_name} ;;
+  }
 
   dimension: email {
     type: string
