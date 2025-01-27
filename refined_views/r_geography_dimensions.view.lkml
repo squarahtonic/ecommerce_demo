@@ -6,17 +6,11 @@ view: geography_dimensions {
     type: string
     sql: ${TABLE}.city ;;
     link: {
-      label: "Link To An Explore"
-      url: "/explore/thelook_ecommerce/order_items?fields=users.state,users.city,order_items.order_count&f[users.city]={{ value }}&sorts=order_items.order_count+desc&limit=500"
-      icon_url: "https://cloud.google.com/favicon.ico"
-    }
-    link: {
     label: "Search"
     url: "http://www.google.com/search?q={{ value }}"
     icon_url: "http://www.google.com/s2/favicons?domain=www.{{ value | encode_uri }}.com"
   }
 }
-
 
   dimension: country {
     type: string
@@ -46,7 +40,10 @@ view: geography_dimensions {
     type: string
     map_layer_name: us_states
     sql: ${TABLE}.state ;;
-
+    link: {
+      label: "gender and age of users"
+      url: "https://training.academy.looker.datatonic.team/explore/ecommerce_demo/order_items?fields=users.city,users.average_age,users.gender&f[users.state]={{ value }},users.average_age+desc+0&limit=500"
+    }
     html: {% if _explore._name == "order_items" %}
           <a href=
           "/explore/thelook_ecommerce/order_items?fields=order_items.detail*&f[users.state]= {{ value }}">{{ value }}</a>

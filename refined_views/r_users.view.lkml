@@ -106,13 +106,14 @@ view: +users {
   measure: average_age {
     type: average
     sql: ${age} ;;
+    value_format: "0"
   }
 
   measure: count_female_users {
     type: count
     filters: {
       field: gender
-      value: "Female"
+      value: "F"
     }
   }
 

@@ -14,3 +14,10 @@ persist_with: default
 #   user_attribute: department
 #   allowed_values: ["Customer Support"]
 # }
+
+
+map_layer: regions {
+  file: "/maps/regions.topojson"
+  format: topojson
+  property_key: "region"
+}

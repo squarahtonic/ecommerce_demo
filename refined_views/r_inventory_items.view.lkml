@@ -36,9 +36,8 @@ view: +inventory_items {
   }
 
   dimension: product_category {
-    type: string
-    sql: ${TABLE}.product_category ;;
   }
+
 
   dimension: product_department {
     type: string

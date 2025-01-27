@@ -18,29 +18,32 @@ view: +products {
   dimension: brand {
     type: string
     sql: ${TABLE}.brand ;;
-
     link: {
       label: "Search"
       url: "http://www.google.com/search?q={{ value }}"
       icon_url: "http://www.google.com/s2/favicons?domain=www.{{ value | encode_uri }}.com"
     }
     link: {
-      label: "{{value}} Analytics Dashboard"
-      url: "/dashboards/126?Brand%20Name={{ value | encode_uri }}"
+      label: "{{value}} Business Pulse"
+      url: "/dashboards/4?Brand={{ value | encode_uri }}"
       icon_url: "https://cloud.google.com/favicon.ico"
     }
+    html: <a href="/dashboards/3?NameFilter={{ value }}" >{{ value }}</a> ;;
   }
 
   dimension: category {
     type: string
     sql: ${TABLE}.category ;;
-
     link: {
       label: "View Category Details"
-      url: "/explore/new_developers_workshop/inventory_items?fields=inventory_items.product_category,inventory_items.product_name,inventory_items.count&f[products.category]={{value | url_encode }}"
-      icon_url: "https://cloud.google.com/favicon.ico"
+      url: "/explore/ecommerce_demo/inventory_items?fields=products.category,inventory_items.product_name,products.count&f[products.category]={{value | url_encode }}"
+    }
+    link: {
+      label: "View Category Look"
+      url: "/looks/3?fields=products.category,inventory_items.product_name,products.count&f[products.category]={{value | url_encode }}"
     }
   }
+
   dimension: cost {
     type: number
     sql: ${TABLE}.cost ;;
@@ -100,8 +103,44 @@ view: +products {
       ;;
   }
 
-## Dynamic Dimension }
+## Parameter
+
+  parameter: select_product_detail {
+    type: unquoted
+    default_value: "department"
+    allowed_value: {
+      value: "department"
+      label: "Department"
+    }
+    allowed_value: {
+      value: "category"
+      label: "Category"
+    }
+    allowed_value: {
+      value: "brand"
+      label: "Brand"
+    }
+  }
+
+  dimension: product_hierarchy {
+    label_from_parameter: select_product_detail
+    type: string
+    sql:
+    {% if select_product_detail._parameter_value ==  'department' %}
+    ${department}
+    {% elsif select_product_detail._parameter_value == 'category' %}
+    ${category}
+    {% else %}
+    ${brand}
+    {% endif %} ;;
+  }
+
+
+
 }
+
+## Dynamic Dimension }
+
 
 #   # Define your dimensions and measures here, like this:
 #   dimension: user_id {

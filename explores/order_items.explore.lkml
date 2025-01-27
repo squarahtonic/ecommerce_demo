@@ -57,3 +57,18 @@ explore: order_items {
     relationship: one_to_one
   }
 }
+
+# Place in `thelook_ecommerce` model
+# explore: +order_items {
+#  aggregate_table: rollup__created_date {
+#    query: {
+#      dimensions: [created_date]
+#      measures: [count]
+#      timezone: "UTC"
+#    }
+
+#    materialization: {
+#      datagroup_trigger: orders_datagroup
+#    }
+#  }
+#}
