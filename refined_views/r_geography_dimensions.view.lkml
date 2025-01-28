@@ -3,7 +3,6 @@ view: geography_dimensions {
 
   dimension: city {
     label: "City Name"
-    type: string
     sql: ${TABLE}.city ;;
     link: {
     label: "Search"
@@ -53,8 +52,6 @@ view: geography_dimensions {
           {{ value }}">{{ value }}</a>
           {% endif %} ;;
   }
-
-
 
   dimension: zip {
     type: zipcode
