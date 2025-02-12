@@ -5,18 +5,6 @@ view: period_over_period {
   #   DATE SELECTIONS   #
   #######################
 
-
-
-
-
-
-
-
-
-
-
-
-
   filter: current_date_range {
     type: date
     view_label: "-- Period over Period"
@@ -267,6 +255,83 @@ view: period_over_period {
     type: string
     sql: CONCAT(${selected_period_end_month_name}, ' ', ${selected_period_end_year}) ;;
   }
+
+  parameter: choose_breakdown {
+    label: "Choose Rows"
+    view_label: "PoP"
+    type: unquoted
+    default_value: "month"
+    allowed_value: {
+      label: "Month Name"
+      value: "month"
+    }
+    allowed_value: {
+      label: "Quarter"
+      value: "quarter"
+    }
+  }
+
+  parameter: choose_comparison {
+    label: "Choose Pivot"
+    view_label: "PoP"
+    type: unquoted
+    default_value: "year"
+    allowed_value: {
+      label: "Year"
+      value: "year"
+    }
+    allowed_value: {
+      label: "Quarter"
+      value: "quarter"
+    }
+  }
+
+  dimension: pop_row {
+    label: "Dynamic Date"
+    view_label: "PoP"
+    label_from_parameter: choose_breakdown
+    order_by_field: sort_by1
+    type: string
+    sql:
+      {% if choose_breakdown._parameter_value == 'month' %} ${created_month_name}
+      {% elsif choose_breakdown._parameter_value == 'quarter' %} ${created_quarter_of_year}
+      {% else %} null {% endif %}
+      ;;
+  }
+
+  dimension: pop_pivot {
+    label: "Period"
+    description: "Pivot this field"
+    view_label: "PoP"
+    label_from_parameter: choose_comparison
+    order_by_field: sort_by2
+    type: string
+    sql:
+      {% if choose_comparison._parameter_value == 'year' %} ${created_year}
+      {% elsif choose_comparison._parameter_value == 'quarter' %} ${created_quarter_of_year}
+      {% else %} null {% endif %};;
+  }
+
+  dimension: sort_by1 {
+    hidden: yes
+    type: number
+    sql:
+      {% if choose_breakdown._parameter_value == 'month' %} ${created_month_num}
+      {% elsif choose_breakdown._parameter_value == 'quarter' %} ${created_quarter_of_year}
+      {% else %} null {% endif %}
+      ;;
+  }
+
+  dimension: sort_by2 {
+    hidden: yes
+    type: string
+    sql:
+    {% if choose_comparison._parameter_value == 'year' %} ${created_year}
+    {% elsif choose_comparison._parameter_value == 'quarter' %} ${created_quarter}
+    {% else %} null {% endif %};;
+  }
+
+
 
 
 }

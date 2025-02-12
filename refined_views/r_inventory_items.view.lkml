@@ -32,7 +32,10 @@ view: +inventory_items {
 
   dimension: product_brand {
     type: string
-    sql: ${TABLE}.product_brand ;;
+    link: {
+      label: "Explore to Brand"
+      url: "/explore/thelook_ecommerce/order_items?fields=inventory_items.product_name,order_items.m_sum_sale_price&f[inventory_items.product_brand]={{value | url_encode }}"
+    }
   }
 
   dimension: product_category {
@@ -58,7 +61,6 @@ view: +inventory_items {
 
   dimension: product_name {
     type: string
-    sql: ${TABLE}.product_name ;;
   }
 
   dimension: product_retail_price {

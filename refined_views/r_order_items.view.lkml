@@ -25,7 +25,8 @@ view: +order_items {
       fiscal_year,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_month_num
+      fiscal_month_num,
+      quarter_of_year
     ]
     sql: ${created_date} ;;
   }
@@ -42,7 +43,9 @@ view: +order_items {
       month_name,
       month_num,
       quarter,
-      year
+      year,
+      quarter_of_year
+
     ]
     sql: ${TABLE}.created_at ;;
   }
@@ -112,10 +115,12 @@ view: +order_items {
     sql: ${TABLE}.shipped_at ;;
   }
 
-  dimension: shipping_time {
+  dimension_group: shipping_time {
     description: "Shipping time in days"
-    type: number
-    sql: DATEDIFF(day, ${order_items.shipped_date}, ${order_items.delivered_date}) ;;
+    type: duration
+    intervals: [day]
+    sql_start: ${shipped_date} ;;
+    sql_end: ${delivered_date} ;;
   }
 
   dimension: sale_price {
@@ -266,7 +271,7 @@ view: +order_items {
 
   measure: average_shipping_time {
     type: average
-    sql: ${shipping_time} ;;
+    sql: ${days_shipping_time} ;;
     value_format: "0.00\" days\""
   }
 
