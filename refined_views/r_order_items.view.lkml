@@ -1,37 +1,69 @@
 include: "/views/order_items.view.lkml"
-include: "/features/period_over_period.view.lkml"
-
 view: +order_items {
-  extends: [period_over_period]
 
-  parameter: select_timeframe {
+  ### Period on Period ###
+
+  parameter: choose_breakdown {
+    label: "Choose Grouping (Rows)"
+    view_label: "_PoP"
     type: unquoted
-    default_value: "created_date"
-    allowed_value: {
-      value: "created_date"
-      label: "Date"
-    }
-    allowed_value: {
-      value: "created_week"
-      label: "Week"
-    }
-    allowed_value: {
-      value: "created_month"
-      label: "Month"
-    }
+    default_value: "year"
+    allowed_value: {label: "Year" value: "year"}
+    allowed_value: {label: "quarter" value: "quarter"}
+    allowed_value: {label: "month" value: "month"}
   }
 
-  dimension: dynamic_timeframe {
-    label_from_parameter: select_timeframe
+  parameter: choose_comparison {
+    label: "Choose Comparison (Pivot)"
+    view_label: "_PoP"
+    type: unquoted
+    default_value: "month"
+    allowed_value: {value: "quarter" }
+    allowed_value: {value: "month"}
+  }
+
+  dimension: pop_row  {
+    view_label: "_PoP"
+    label_from_parameter: choose_breakdown
+    type: string
+    order_by_field: sort_by1 # IMPORTANT - see description below
+    sql:
+    {% if choose_breakdown._parameter_value == 'year' %} ${created_year}
+    {% elsif choose_breakdown._parameter_value == 'quarter' %} ${created_quarter_of_year}
+    {% elsif choose_breakdown._parameter_value == 'month' %} ${created_month}
+    {% else %}NULL{% endif %} ;;
+  }
+
+  dimension: pop_pivot {
+    view_label: "_PoP"
+    label_from_parameter: choose_comparison
+    type: string
+    order_by_field: sort_by2 # IMPORTANT - see description below
+    sql:
+    {% if choose_comparison._parameter_value == 'quarter' %} ${created_quarter_of_year}
+    {% elsif choose_comparison._parameter_value == 'month' %} ${created_month_name}
+    {% else %}NULL{% endif %} ;;
+  }
+
+# These dimensions are just to make sure the dimensions sort correctly
+
+  dimension: sort_by1 {
+    hidden: yes
+    type: number
+    sql:
+    {% if choose_breakdown._parameter_value == 'year' %} ${created_year}
+    {% elsif choose_breakdown._parameter_value == 'quarter' %} ${created_quarter_of_year}
+    {% elsif choose_breakdown._parameter_value == 'month' %} ${created_month_num}
+    {% else %}NULL{% endif %} ;;
+  }
+
+  dimension: sort_by2 {
+    hidden: yes
     type: string
     sql:
-    {% if select_timeframe._parameter_value == 'created_date' %}
-    ${created_date}
-    {% elsif select_timeframe._parameter_value == 'created_week' %}
-    ${created_week}
-    {% else %}
-    ${created_month}
-    {% endif %} ;;
+    {% if choose_comparison._parameter_value == 'quarter' %} ${created_quarter_of_year}
+    {% elsif choose_comparison._parameter_value == 'month' %} ${created_month_num}
+    {% else %}NULL{% endif %} ;;
   }
 
 
@@ -340,49 +372,6 @@ view: +order_items {
     {% else %}
     ${created_month}
     {% endif %} ;;
-  }
-
-
-## Orders MTD & YTD
-  measure: m_orders_selected_period {
-    view_label: "Order Items"
-    group_label: "Metrics"
-    label: "Total Orders (Selected Period)"
-    value_format_name : decimal_0
-    type: sum
-    sql: CASE WHEN ${period} = 'Selected Period' THEN CAST(${order_id} AS NUMERIC) ELSE NULL END ;;
-  }
-
-  measure: m_orders_previous_year {
-    view_label: "Order Items"
-    group_label: "Metrics"
-    label: "Total Orders (Selected Period -1 year)"
-    value_format_name : decimal_0
-    type: sum
-    sql: CASE WHEN ${period} = 'Previous Year' THEN CAST(${order_id} AS NUMERIC) ELSE NULL END ;;
-  }
-
-
-  measure: m_orders_evolution {
-    view_label: "Order Items"
-    group_label: "Metrics"
-    label: "Orders Evolution %"
-    value_format: "0%"
-    type: number
-    sql: SAFE_DIVIDE(${m_orders_selected_period}, ${m_orders_previous_year}) -1 ;;
-    html:
-     {% if value > 0.01 %}
-    <font color= "#2b7d2b">+{{ value | times: 100 | round:0 }}%</font>
-    {% elsif value < -0.01 %}
-    <font color="#c4032d">{{ value | times: 100 | round:0 }}%</font>
-     {% elsif value > 0.0 and value < 0.01 %}
-    <font color= "#2b7d2b">+{{ value | times: 100 | round:1}}%</font>
-    {% elsif value > -0.01 and value < 0.0 %}
-    <font color= "#c4032d">{{ value | times: 100 | round:1}}%</font>
-    {% else %}
-    <font color="black">{{ value | times: 100 | round:0 }}%</font>
-    {% endif %}
-    ;;
   }
 
 }
