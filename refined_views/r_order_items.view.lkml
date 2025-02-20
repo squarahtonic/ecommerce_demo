@@ -4,6 +4,38 @@ include: "/features/period_over_period.view.lkml"
 view: +order_items {
   extends: [period_over_period]
 
+  parameter: select_timeframe {
+    type: unquoted
+    default_value: "created_date"
+    allowed_value: {
+      value: "created_date"
+      label: "Date"
+    }
+    allowed_value: {
+      value: "created_week"
+      label: "Week"
+    }
+    allowed_value: {
+      value: "created_month"
+      label: "Month"
+    }
+  }
+
+  dimension: dynamic_timeframe {
+    label_from_parameter: select_timeframe
+    type: string
+    sql:
+    {% if select_timeframe._parameter_value == 'created_date' %}
+    ${created_date}
+    {% elsif select_timeframe._parameter_value == 'created_week' %}
+    ${created_week}
+    {% else %}
+    ${created_month}
+    {% endif %} ;;
+  }
+
+
+
   dimension: id {
     hidden:  no
     primary_key: yes
