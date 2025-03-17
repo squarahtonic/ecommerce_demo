@@ -77,6 +77,7 @@ view: +order_items {
   }
 
   dimension_group: pop_no_tz {
+    hidden: yes
     timeframes: [
       raw,
       date,
@@ -263,7 +264,7 @@ view: +order_items {
   }
 
   measure: total_sale_price {
-    alias: [total_revenue]
+    label: "Total Revenue"
     type: sum
     value_format_name: usd
     sql: ${sale_price} ;;
@@ -292,7 +293,7 @@ view: +order_items {
   }
 
   measure: total_sale_price_completed {
-    label: "Total Sale Price from Completed Orders"
+    label: "Total Revenue from Completed Orders"
     type: sum
     value_format_name: usd
     sql: ${sale_price} ;;
