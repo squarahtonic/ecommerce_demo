@@ -10,11 +10,6 @@ view: +products {
     value_format_name: id
   }
 
-  dimension: test  {
-    label: "Test"
-    sql: 1 ;;
-  }
-
   dimension: brand {
     type: string
     sql: ${TABLE}.brand ;;

@@ -43,7 +43,7 @@ view: +users {
 
   dimension: is_new_customer {
     type: yesno
-    sql: ${days_since_sign_up} < 90 ;;
+    sql: ${days_since_sign_up} < 400 ;;
   }
 
   dimension: years_a_customer {

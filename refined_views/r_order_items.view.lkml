@@ -203,6 +203,7 @@ view: +order_items {
   }
 
   dimension: gross_margin {
+    description: "Difference between sale price and item cost (as in inventory items)"
     type: number
     value_format_name: usd
     sql: ${sale_price} - ${inventory_items.cost} ;;
@@ -210,8 +211,6 @@ view: +order_items {
 
   dimension: status {
     description: "Whether order is processing, shipped, completed, etc."
-    type: string
-    sql: ${TABLE}.status ;;
   }
 
   dimension: inventory_item_id {
@@ -287,6 +286,10 @@ view: +order_items {
   }
 
    measure: average_spend_per_user {
+    group_label: "Sale Metrics"
+    tags: ["users"]
+    label: "Average User Spend"
+    description: "Average Spend per user: Total spend divided by number of users"
     type: number
     sql: ${total_sale_price}*1.0/nullif(${users.count},0) ;;
     value_format_name: usd
@@ -315,30 +318,49 @@ view: +order_items {
     }
   }
 
-  measure: total_profit {
+  measure: m_total_profit {
     type: sum
     sql: ${profit} ;;
     value_format_name: usd
   }
 
-  measure: profit_margin {
+  measure: m_profit_margin {
     type: number
-    sql: ${total_profit}/NULLIF(${total_sale_price}, 0) ;;
+    sql: ${m_total_profit}/NULLIF(${total_sale_price}, 0) ;;
     value_format_name: percent_2
   }
 
-  measure: total_gross_margin {
+  measure: m_total_gross_margin {
     type: sum
     value_format_name: usd
     sql: ${gross_margin} ;;
     drill_fields: [detail*]
   }
 
-  measure: average_shipping_time {
+  measure: m_average_shipping_time {
     type: average
     sql: ${days_shipping_time} ;;
     value_format: "0.00\" days\""
   }
+
+  measure: m_return_orders {
+    group_label: "Return rate"
+    label: "Returns"
+    type: count_distinct
+    description: "Number of Total Invoiced Orders and returned or exchanged"
+    sql: ${order_id} ;;
+    filters: [status: "Returned,Cancelled"]
+  }
+
+  measure: m_gross_orders {
+    group_label: "Return rate"
+    label: "Gross"
+    type: count_distinct
+    description: "Number of Completed Orders"
+    sql: ${order_id} ;;
+    filters: [status: "-Returned,-Cancelled"]
+  }
+
 
 # ----- Sets of fields for drilling ------
   set: detail {

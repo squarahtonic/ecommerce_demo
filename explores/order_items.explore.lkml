@@ -39,12 +39,6 @@ explore: order_items {
     relationship: many_to_one
   }
 
-  join: distribution_centers {
-    type: left_outer
-    sql_on: ${products.distribution_center_id} = ${distribution_centers.id} ;;
-    relationship: many_to_one
-  }
-
   join: brand_order_facts_ndt {
     type: inner
     sql_on: ${products.brand} = ${brand_order_facts_ndt.brand};;

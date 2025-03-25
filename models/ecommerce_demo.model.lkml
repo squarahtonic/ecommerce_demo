@@ -4,6 +4,7 @@ label: "E-commerce Demo"
 
 include: "/explores/inventory_items.explore.lkml"
 include: "/explores/order_items.explore.lkml"
+include: "/explores/brand_ranking.explore.lkml"
 
 include: "/utilities/datagroups.lkml"
 include: "/utilities/data_tests.lkml"
