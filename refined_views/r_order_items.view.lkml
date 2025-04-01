@@ -9,8 +9,8 @@ view: +order_items {
     type: unquoted
     default_value: "year"
     allowed_value: {label: "Year" value: "year"}
-    allowed_value: {label: "quarter" value: "quarter"}
-    allowed_value: {label: "month" value: "month"}
+    allowed_value: {label: "Quarter" value: "quarter"}
+    allowed_value: {label: "Month" value: "month"}
   }
 
   parameter: choose_comparison {
@@ -72,7 +72,6 @@ view: +order_items {
     hidden:  no
     primary_key: yes
     type: number
-    sql: ${TABLE}.id ;;
     value_format_name: id
   }
 
@@ -216,21 +215,18 @@ view: +order_items {
   dimension: inventory_item_id {
     hidden:  yes
     type: number
-    sql: ${TABLE}.inventory_item_id ;;
     value_format_name: id
   }
 
   dimension: order_id {
     hidden:  no
     type: number
-    sql: ${TABLE}.order_id ;;
     value_format_name: id
   }
 
   dimension: user_id {
     hidden: no
     type: number
-    sql: ${TABLE}.user_id ;;
     value_format_name: id
   }
 
@@ -250,19 +246,19 @@ view: +order_items {
 
 ## MEASURES ##
 
-  measure: order_item_count {
+  measure: m_order_item_count {
     type: count
     drill_fields: [detail*]
   }
 
-  measure: order_count {
+  measure: m_order_count {
     description: "A count of unique orders"
     type: count_distinct
     sql: ${order_id} ;;
     drill_fields: [detail*]
   }
 
-  measure: total_sale_price {
+  measure: m_total_sale_price {
     label: "Total Revenue"
     type: sum
     value_format_name: usd
@@ -278,24 +274,24 @@ view: +order_items {
     {% endif %};;
   }
 
-  measure: average_sale_price {
+  measure: m_average_sale_price {
     type: average
     value_format_name: usd
     sql: ${sale_price} ;;
     drill_fields: [detail*]
   }
 
-   measure: average_spend_per_user {
+   measure: m_average_spend_per_user {
     group_label: "Sale Metrics"
     tags: ["users"]
     label: "Average User Spend"
     description: "Average Spend per user: Total spend divided by number of users"
     type: number
-    sql: ${total_sale_price}*1.0/nullif(${users.count},0) ;;
+    sql: ${m_total_sale_price}*1.0/nullif(${users.count},0) ;;
     value_format_name: usd
   }
 
-  measure: total_sale_price_completed {
+  measure: m_total_sale_price_completed {
     label: "Total Revenue from Completed Orders"
     type: sum
     value_format_name: usd
@@ -306,7 +302,7 @@ view: +order_items {
     }
   }
 
-  measure: total_sale_price_returned {
+  measure: m_total_sale_price_returned {
     label: "Total Sale Price Lost from Returns"
     description: "Sales not gained due to the ordered item being returned by the customer"
     type: sum
@@ -326,7 +322,7 @@ view: +order_items {
 
   measure: m_profit_margin {
     type: number
-    sql: ${m_total_profit}/NULLIF(${total_sale_price}, 0) ;;
+    sql: ${m_total_profit}/NULLIF(${m_total_sale_price}, 0) ;;
     value_format_name: percent_2
   }
 
@@ -360,6 +356,15 @@ view: +order_items {
     sql: ${order_id} ;;
     filters: [status: "-Returned,-Cancelled"]
   }
+
+  measure: m_return_rate {
+    group_label: "Metrics"
+    label: "Return Rate"
+    type: number
+    description: "Number of total invoiced orders and returned or cancelled / Number of total orders invoiced excluding returns & exchanges"
+    sql: abs(${m_return_orders}) / NULLIF(${m_gross_orders},0) ;;
+    value_format_name: percent_0  }
+
 
 
 # ----- Sets of fields for drilling ------

@@ -3,7 +3,6 @@ view: geography_dimensions {
 
   dimension: city {
     label: "City Name"
-    sql: ${TABLE}.city ;;
     link: {
     label: "Search"
     url: "http://www.google.com/search?q={{ value }}"
@@ -20,14 +19,10 @@ view: geography_dimensions {
 
   dimension: latitude {
     hidden: yes
-    type: number
-    sql: ${TABLE}.latitude ;;
   }
 
   dimension: longitude {
     hidden: yes
-    type: number
-    sql: ${TABLE}.longitude ;;
   }
 
   dimension: map_location {
@@ -39,7 +34,6 @@ view: geography_dimensions {
   dimension: state {
     type: string
     map_layer_name: us_states
-    sql: ${TABLE}.state ;;
     link: {
       label: "gender and age of users"
       url: "https://training.academy.looker.datatonic.team/explore/ecommerce_demo/order_items?fields=users.city,users.average_age,users.gender&f[users.state]={{ value }},users.average_age+desc+0&limit=500"
@@ -57,7 +51,6 @@ view: geography_dimensions {
   dimension: zip {
     type: zipcode
     map_layer_name: us_zipcode_tabulation_areas
-    sql: ${TABLE}.zip ;;
   }
 
   dimension: region {

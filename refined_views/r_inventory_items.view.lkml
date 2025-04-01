@@ -6,7 +6,6 @@ view: +inventory_items {
     hidden:  yes
     primary_key: yes
     type: number
-    sql: ${TABLE}.id ;;
   }
 
   dimension_group: created {
@@ -27,7 +26,6 @@ view: +inventory_items {
   dimension: cost {
     type: number
     value_format_name: usd
-    sql: ${TABLE}.cost ;;
   }
 
   dimension: product_brand {
@@ -43,20 +41,14 @@ view: +inventory_items {
 
 
   dimension: product_department {
-    type: string
-    sql: ${TABLE}.product_department ;;
   }
 
   dimension: product_distribution_center_id {
-    hidden:  yes
-    type: number
-    sql: ${TABLE}.product_distribution_center_id ;;
+    hidden: yes
   }
 
   dimension: product_id {
-    type: number
     hidden: yes
-    sql: ${TABLE}.product_id ;;
   }
 
   dimension: product_name {
@@ -64,14 +56,10 @@ view: +inventory_items {
   }
 
   dimension: product_retail_price {
-    type: number
     value_format_name: usd
-    sql: ${TABLE}.product_retail_price ;;
   }
 
   dimension: product_sku {
-    type: string
-    sql: ${TABLE}.product_sku ;;
   }
 
   dimension_group: sold {
@@ -88,19 +76,19 @@ view: +inventory_items {
     sql: ${TABLE}.sold_at ;;
   }
 
-  measure: total_cost {
+  measure: m_total_cost {
     type: sum
     sql: ${cost} ;;
     value_format_name: usd
   }
 
-  measure: average_cost {
+  measure: m_average_cost {
     type: average
     sql: ${cost} ;;
     value_format_name: usd
   }
 
-  measure: count_distinct_sku {
+  measure: m_count_distinct_sku {
     type: count_distinct
     sql: ${product_sku} ;;
   }

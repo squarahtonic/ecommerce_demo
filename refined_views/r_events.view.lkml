@@ -7,8 +7,6 @@ view: +events {
   dimension: id {
     primary_key: yes
     hidden: yes
-    type: number
-    sql: ${TABLE}.id ;;
   }
 
   dimension_group: created {
@@ -26,62 +24,42 @@ view: +events {
   }
 
   dimension: user_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.user_id ;;
   }
 
   dimension: ip_address {
-    type: string
-    sql: ${TABLE}.ip_address ;;
   }
 
   dimension: user_identifier {
-    type: string
     sql: COALESCE(CAST(${user_id} AS STRING), ${ip_address}) ;;
   }
 
   dimension: session_id {
-    type: string
-    sql: ${TABLE}.session_id ;;
   }
 
   dimension: sequence_number {
-    type: number
-    sql: ${TABLE}.sequence_number ;;
   }
 
   dimension: event_type {
-    type: string
-    sql: ${TABLE}.event_type ;;
   }
 
   dimension: traffic_source {
-    type: string
-    sql: ${TABLE}.traffic_source ;;
   }
 
   dimension: os {
-    type: string
-    sql: ${TABLE}.os ;;
   }
 
   dimension: browser {
-    type: string
-    sql: ${TABLE}.browser ;;
   }
 
   dimension: uri {
-    type: string
-    sql: ${TABLE}.uri ;;
   }
 
-  measure: count_distinct_user_identifiers {
+  measure: m_count_distinct_user_identifiers {
     type: count_distinct
     sql: ${user_identifier} ;;
   }
 
-  measure: count_events_facebook {
+  measure: m_facebook {
     hidden: yes
     type: count_distinct
     sql: ${id} ;;

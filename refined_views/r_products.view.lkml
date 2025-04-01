@@ -6,13 +6,11 @@ view: +products {
     hidden:  yes
     primary_key: yes
     type: number
-    sql: ${TABLE}.id ;;
     value_format_name: id
   }
 
   dimension: brand {
     type: string
-    sql: ${TABLE}.brand ;;
     link: {
       label: "Search"
       url: "http://www.google.com/search?q={{ value }}"
@@ -28,7 +26,6 @@ view: +products {
 
   dimension: category {
     type: string
-    sql: ${TABLE}.category ;;
     link: {
       label: "View Category Details"
       url: "/explore/ecommerce_demo/inventory_items?fields=products.category,inventory_items.product_name,products.count&f[products.category]={{value | url_encode }}"
@@ -40,35 +37,23 @@ view: +products {
   }
 
   dimension: cost {
-    type: number
-    sql: ${TABLE}.cost ;;
   }
 
   dimension: department {
-    type: string
-    sql: ${TABLE}.department ;;
   }
 
   dimension: distribution_center_id {
-    type: number
     hidden: yes
-    sql: ${TABLE}.distribution_center_id ;;
   }
 
   dimension: name {
-    type: string
-    sql: ${TABLE}.name ;;
   }
 
   dimension: retail_price {
-    type: number
     value_format_name: usd
-    sql: ${TABLE}.retail_price ;;
   }
 
   dimension: sku {
-    type: string
-    sql: ${TABLE}.sku ;;
   }
 
   measure: count {

@@ -9,7 +9,6 @@ view: +users {
     hidden:  no
     primary_key: yes
     type: number
-    sql: ${TABLE}.id ;;
     value_format_name: id
   }
 
@@ -71,14 +70,11 @@ view: +users {
   }
 
   dimension: email {
-    type: string
-    sql: ${TABLE}.email ;;
   }
 
   dimension: age {
     type: number
     value_format_name: decimal_0
-    sql: ${TABLE}.age ;;
   }
 
   dimension: age_tier {
@@ -90,12 +86,10 @@ view: +users {
 
   dimension: gender {
     type: string
-    sql: ${TABLE}.gender ;;
   }
 
   dimension: traffic_source {
     type: string
-    sql: ${TABLE}.traffic_source ;;
   }
 
   measure: max_age {

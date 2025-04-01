@@ -3,13 +3,13 @@ view: brand_order_facts_ndt {
   derived_table: {
     explore_source: order_items {
       column: brand { field: products.brand }
-      column: total_sale_price {}
+      column: m_total_sale_price {}
       derived_column: brand_rank {
-        sql: row_number() over (order by total_sale_price desc) ;;
+        sql: row_number() over (order by m_total_sale_price desc) ;;
       }
       # bind_all_filters: yes
     }
-    # datagroup_trigger: orders_datagroup
+   #  datagroup_trigger: orders_datagroup
   }
 
   dimension: total_revenue {
