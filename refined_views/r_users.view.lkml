@@ -92,18 +92,21 @@ view: +users {
     type: string
   }
 
-  measure: max_age {
+  measure: m_max_age {
+    label: "Oldest Users"
     type: max
     sql: ${age} ;;
   }
 
-  measure: average_age {
+  measure: m_average_age {
+    label: "Average User Age"
     type: average
     sql: ${age} ;;
     value_format: "0"
   }
 
-  measure: count_female_users {
+  measure: m_count_female_users {
+    label: "Female Users"
     type: count
     filters: {
       field: gender

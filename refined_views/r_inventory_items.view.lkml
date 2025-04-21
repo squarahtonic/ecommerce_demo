@@ -77,18 +77,21 @@ view: +inventory_items {
   }
 
   measure: m_total_cost {
+    label: "Total Cost"
     type: sum
     sql: ${cost} ;;
     value_format_name: usd
   }
 
   measure: m_average_cost {
+    label: "Average Cost"
     type: average
     sql: ${cost} ;;
     value_format_name: usd
   }
 
   measure: m_count_distinct_sku {
+    label: "Distinct Skus"
     type: count_distinct
     sql: ${product_sku} ;;
   }

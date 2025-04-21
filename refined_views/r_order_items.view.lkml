@@ -18,19 +18,19 @@ view: +order_items {
     view_label: "_PoP"
     type: unquoted
     default_value: "month"
-    allowed_value: {value: "quarter" }
-    allowed_value: {value: "month"}
+    allowed_value: {label: "Quarter" value: "quarter" }
+    allowed_value: {label: "Month" value: "month"}
   }
 
   dimension: pop_row  {
     view_label: "_PoP"
     label_from_parameter: choose_breakdown
     type: string
-    order_by_field: sort_by1 # IMPORTANT - see description below
+    order_by_field: sort_by1
     sql:
     {% if choose_breakdown._parameter_value == 'year' %} ${created_year}
     {% elsif choose_breakdown._parameter_value == 'quarter' %} ${created_quarter_of_year}
-    {% elsif choose_breakdown._parameter_value == 'month' %} ${created_month}
+    {% elsif choose_breakdown._parameter_value == 'month' %} ${created_month_name}
     {% else %}NULL{% endif %} ;;
   }
 
@@ -38,7 +38,7 @@ view: +order_items {
     view_label: "_PoP"
     label_from_parameter: choose_comparison
     type: string
-    order_by_field: sort_by2 # IMPORTANT - see description below
+    order_by_field: sort_by2
     sql:
     {% if choose_comparison._parameter_value == 'quarter' %} ${created_quarter_of_year}
     {% elsif choose_comparison._parameter_value == 'month' %} ${created_month_name}
@@ -59,7 +59,7 @@ view: +order_items {
 
   dimension: sort_by2 {
     hidden: yes
-    type: string
+    type: number
     sql:
     {% if choose_comparison._parameter_value == 'quarter' %} ${created_quarter_of_year}
     {% elsif choose_comparison._parameter_value == 'month' %} ${created_month_num}
@@ -246,19 +246,16 @@ view: +order_items {
 
 ## MEASURES ##
 
-  measure: m_order_item_count {
-    type: count
-    drill_fields: [detail*]
-  }
-
   measure: m_order_count {
     description: "A count of unique orders"
+    label: "Unique Orders"
     type: count_distinct
     sql: ${order_id} ;;
     drill_fields: [detail*]
   }
 
   measure: m_total_sale_price {
+    group_label: "Sale Metrics"
     label: "Total Revenue"
     type: sum
     value_format_name: usd
@@ -275,6 +272,8 @@ view: +order_items {
   }
 
   measure: m_average_sale_price {
+    group_label: "Sale Metrics"
+    label: "Average Sale Price"
     type: average
     value_format_name: usd
     sql: ${sale_price} ;;
@@ -293,6 +292,7 @@ view: +order_items {
 
   measure: m_total_sale_price_completed {
     label: "Total Revenue from Completed Orders"
+    group_label: "Sale Metrics"
     type: sum
     value_format_name: usd
     sql: ${sale_price} ;;
@@ -303,6 +303,7 @@ view: +order_items {
   }
 
   measure: m_total_sale_price_returned {
+    group_label: "Sale Metrics"
     label: "Total Sale Price Lost from Returns"
     description: "Sales not gained due to the ordered item being returned by the customer"
     type: sum
@@ -315,18 +316,21 @@ view: +order_items {
   }
 
   measure: m_total_profit {
+    label: "Total Profit"
     type: sum
     sql: ${profit} ;;
     value_format_name: usd
   }
 
   measure: m_profit_margin {
+    label: "Profit Margin"
     type: number
     sql: ${m_total_profit}/NULLIF(${m_total_sale_price}, 0) ;;
     value_format_name: percent_2
   }
 
   measure: m_total_gross_margin {
+    label: "Gross Margin"
     type: sum
     value_format_name: usd
     sql: ${gross_margin} ;;
@@ -334,6 +338,7 @@ view: +order_items {
   }
 
   measure: m_average_shipping_time {
+    label: "Average Shipping Time"
     type: average
     sql: ${days_shipping_time} ;;
     value_format: "0.00\" days\""

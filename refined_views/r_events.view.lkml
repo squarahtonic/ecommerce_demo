@@ -55,11 +55,13 @@ view: +events {
   }
 
   measure: m_count_distinct_user_identifiers {
+    label: "Distinct Users"
     type: count_distinct
     sql: ${user_identifier} ;;
   }
 
   measure: m_facebook {
+    label: "Facebook users"
     hidden: yes
     type: count_distinct
     sql: ${id} ;;
