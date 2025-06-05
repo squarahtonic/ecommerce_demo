@@ -80,7 +80,7 @@ view: +users {
   dimension: age_tier {
     type: tier
     style: integer
-    sql: ${TABLE}.age ;;
+    sql: ${age} ;;
     tiers: [10, 20, 30, 40, 50, 60, 70, 80, 90]
   }
 
@@ -91,6 +91,16 @@ view: +users {
   dimension: traffic_source {
     type: string
   }
+
+dimension: is_email_source {
+  type: yesno
+  sql: ${traffic_source} = "Email" ;;
+}
+
+dimension: days_since_signup {
+  type: number
+  sql: DATE_DIF(current_date(), ${created_month}, DAY) ;;
+}
 
   measure: m_max_age {
     label: "Oldest Users"
