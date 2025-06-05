@@ -92,6 +92,12 @@ view: +users {
     type: string
   }
 
+  dimension: is_email_source {
+    type: yesno
+    sql: ${traffic_source}="Email" ;;
+
+  }
+
   measure: m_max_age {
     label: "Oldest Users"
     type: max
