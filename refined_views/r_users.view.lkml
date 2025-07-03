@@ -81,7 +81,7 @@ view: +users {
     type: tier
     style: integer
     sql: ${TABLE}.age ;;
-    tiers: [10, 20, 30, 40, 50, 60, 70, 80, 90]
+    tiers: [18, 25, 35, 45, 55, 65, 75, 85, 95, 100]
   }
 
   dimension: gender {
