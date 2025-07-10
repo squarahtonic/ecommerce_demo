@@ -1,5 +1,6 @@
 include: "/refined_views/*.view" # include all the views
 include: "/derived_tables/*.view"
+include: "/refined_views/r_users_limited.view.lkml"
 
 
 explore: order_items {
