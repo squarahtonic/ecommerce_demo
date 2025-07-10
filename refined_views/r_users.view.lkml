@@ -78,12 +78,12 @@ view: +users {
     sql: ${TABLE}.age ;;
   }
 
-  dimension: age_tier {
-    type: tier
-    style: integer
-    sql: ${TABLE}.age ;;
-    tiers: [10, 20, 30, 40, 50, 60, 70, 80, 90]
-  }
+  # dimension: age_tier {
+  #   type: tier
+  #   style: integer
+  #   sql: ${TABLE}.age ;;
+  #   tiers: [18,25,35,45,55,65,75,85,95,105]
+  # }
 
   dimension: gender {
     type: string
@@ -94,6 +94,18 @@ view: +users {
     type: string
     sql: ${TABLE}.traffic_source ;;
   }
+
+  dimension: is_email_source {
+    type: yesno
+    sql: ${traffic_source}="Email" ;;
+
+  }
+
+  dimension: full_name {
+    type: string
+    sql: concat(${first_name},' ', ${last_name}) ;;
+  }
+
 
   measure: max_age {
     type: max
@@ -116,5 +128,12 @@ view: +users {
   measure: count {
     type: count
     drill_fields: [id, events.count, order_items.count]
+  }
+
+  measure: total_revenue_email_source {
+    type: sum
+    sql: ${TABLE}.sale_price ;;
+    filters: [users.is_email_source: "Yes"]
+    value_format_name: usd
   }
 }
